@@ -2,8 +2,9 @@
 (function () {
     "use strict";
 
-    const LOCAL = ["127.0.0.1", "localhost"].includes(location.hostname);
-    const API = LOCAL ? "http://127.0.0.1:8787" : "https://lastwar-vp.kuper.workers.dev";
+    // 網頁和 API 由同一個 Worker 提供（mahuvp.kupers.cc），所以用相對路徑；
+    // 只有本機用 python 開前台（8792）時，API 在另一個埠的 wrangler dev
+    const API = location.port === "8792" ? "http://127.0.0.1:8787" : "";
     const POLL_MS = 20000;
     const TW = 8 * 3600;
     const VN = 7 * 3600;

@@ -2,8 +2,9 @@
 
 盟友點連結就能看未來 1～2 週每天的 VP 時段、自己認領／取消，並即時統計每個人認領了幾小時。
 
-- 前台：`docs/`（手寫 HTML/CSS/JS，不用建置）→ GitHub Pages `https://kuperss.github.io/lastwar-vp/`
-- 後端：`worker/`（Cloudflare Worker + D1）→ `https://lastwar-vp.kuper.workers.dev`
+- 正式網址：**https://mahuvp.kupers.cc**（網頁和 API 都由同一個 Cloudflare Worker 提供）
+- 網頁：`docs/`（手寫 HTML/CSS/JS，不用建置），部署時當成 Worker 的靜態檔一起上傳
+- 後端：`worker/`（Cloudflare Worker + D1），`/api/*` 才進程式，其他路徑直接回 `docs/` 的檔案
 - 時段預設每天台灣時間 12–13、21–22、22–23，管理員可在頁面上改（從當天起生效，過去紀錄不變）
 
 ## 給盟友的使用說明（可直接貼到群組）
@@ -24,7 +25,8 @@ npx wrangler@4 d1 execute lastwar-vp --local --file=schema.sql
 npx wrangler@4 dev --local --port 8787
 ```
 
-另開一個終端機開前台（前台在 127.0.0.1 時會自動連本機 API）：
+`wrangler dev` 會連網頁一起開在 http://127.0.0.1:8787 。
+若想另外用 python 開前台（8792 埠時會自動連 8787 的 API）：
 
 ```bash
 python -m http.server 8792 --bind 127.0.0.1 --directory docs
@@ -62,13 +64,12 @@ node --test test/slots.test.mjs
    npx wrangler@4 secret put ADMIN_KEY
    npx wrangler@4 secret put PW_PEPPER
    ```
-4. 部署 Worker：
+4. 部署（網頁和 API 一起上去，綁 `mahuvp.kupers.cc`）：
    ```bash
    npx wrangler@4 deploy
    ```
-5. 前台：推到 GitHub repo `kuperss/lastwar-vp`，Settings → Pages 設成 main 分支的 `/docs`
-   （GitHub Pages 只能從根目錄或 `/docs` 發布，所以前台資料夾叫 `docs`）。
-   若網址不是 `https://kuperss.github.io/...`，要把網域加進 `wrangler.toml` 的 `ALLOWED_ORIGINS` 再部署一次。
+   之後改了網頁或 API，都只要在 `worker/` 再跑一次 `npx wrangler@4 deploy`。
+   換網址的話，改 `wrangler.toml` 的 `routes` 和 `ALLOWED_ORIGINS`。
 
 ## 設計重點
 

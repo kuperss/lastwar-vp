@@ -5,9 +5,19 @@ compatibility_date = "2026-08-01"
 # 只要正式網址一個對外入口就夠，不需要每個版本再多開一組預覽網址
 preview_urls = false
 
-# 只允許這些來源呼叫 API。本機測試時前台跑在 127.0.0.1:8792。
+# 正式網址：網頁和 API 都在這裡（同一個網址，不用跨網域）
+routes = [
+  { pattern = "mahuvp.kupers.cc", custom_domain = true }
+]
+
+# 網頁就是 ../docs 這個資料夾；/api/ 開頭的請求才交給 src/worker.js
+[assets]
+directory = "../docs"
+run_worker_first = ["/api/*"]
+
+# 只允許這些來源呼叫會改資料的 API。本機測試時前台跑在 127.0.0.1:8792。
 [vars]
-ALLOWED_ORIGINS = "https://kuperss.github.io,http://127.0.0.1:8792,http://localhost:8792"
+ALLOWED_ORIGINS = "https://mahuvp.kupers.cc,http://127.0.0.1:8792,http://localhost:8792"
 
 # 正式資料庫（2026-10-24 建立，APAC）
 [[d1_databases]]
