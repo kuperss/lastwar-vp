@@ -1,7 +1,7 @@
 /* 三語字典。{name} 這種寫法會被代入變數。越南文、英文建議請盟友看過一次。 */
 window.I18N = {
     zh: {
-        title: "副總統輪值表",
+        title: "Mahu VP 輪值表",
         subtitle: "每格 1 小時 · 台灣時間／越南時間",
         heroSub: "每格一小時。台灣時間、越南時間，一眼看清。",
         heroOpen: "這 7 天還有 {n} 沒人認領。",
@@ -134,7 +134,7 @@ window.I18N = {
     },
 
     vi: {
-        title: "Lịch trực Phó Tổng thống",
+        title: "Lịch trực Mahu VP",
         subtitle: "Mỗi ô 1 giờ · Giờ Đài Loan / Giờ Việt Nam",
         heroSub: "Mỗi ô một giờ. Giờ Đài Loan và Việt Nam, nhìn là thấy.",
         heroOpen: "7 ngày này còn {n} chưa có người nhận.",
@@ -267,7 +267,7 @@ window.I18N = {
     },
 
     en: {
-        title: "VP Duty Schedule",
+        title: "Mahu VP Schedule",
         subtitle: "1-hour slots · Taiwan time / Vietnam time",
         heroSub: "One-hour slots. Taiwan and Vietnam time, at a glance.",
         heroOpen: "{n} still open in these 7 days.",
