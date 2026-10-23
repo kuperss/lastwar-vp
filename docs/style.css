@@ -741,15 +741,6 @@ body { -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
 
 .hero { display: block; position: relative; text-align: center; padding: 60px 8px 44px; }
 
-.hero::before {
-    content: "VP DUTY ROSTER";
-    display: block;
-    margin-bottom: 14px;
-    font: 600 0.72rem var(--font-body);
-    letter-spacing: 0.32em;
-    color: var(--accent);
-}
-
 .hero-title {
     margin: 0;
     font-family: var(--font-display);
@@ -1019,7 +1010,6 @@ input:focus, select:focus { outline: 3px solid rgba(214, 185, 140, 0.3); outline
 /* 手機：主視覺縮小，讓週檢視盡量留在第一個畫面裡 */
 @media (max-width: 600px) {
     .hero { padding: 16px 4px 0; }
-    .hero::before { margin-bottom: 4px; font-size: 0.6rem; }
     .hero-title { font-size: 1.75rem; }
     .hero-sub { display: none; }
     .hero-open { margin-top: 6px; font-size: 0.95rem; }
