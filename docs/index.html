@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VP 輪值表</title>
+    <meta name="description" content="Last War 副總統輪值排班表">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <div class="brand">
+                <h1 data-i18n="title">副總統輪值表</h1>
+                <p class="sub" data-i18n="subtitle">每格 1 小時 · 台灣時間／越南時間</p>
+            </div>
+            <div class="top-actions">
+                <div class="lang" role="group" aria-label="Language">
+                    <button type="button" data-lang="zh">中</button>
+                    <button type="button" data-lang="vi">VI</button>
+                    <button type="button" data-lang="en">EN</button>
+                </div>
+                <div id="who" class="who"></div>
+            </div>
+        </header>
+
+        <!-- 主視覺大標題 -->
+        <section class="hero">
+            <p class="hero-title" data-i18n="title">副總統輪值表</p>
+            <p class="hero-sub" data-i18n="heroSub">每格一小時。台灣時間、越南時間，一眼看清。</p>
+            <p class="hero-open" id="heroOpen"></p>
+        </section>
+
+        <div id="adminBar" class="admin-bar" hidden>
+            <span data-i18n="adminMode">管理模式</span>
+            <button type="button" class="link" id="adminExit" data-i18n="adminExit">離開管理模式</button>
+        </div>
+
+        <main class="layout">
+            <section class="panel" id="schedulePanel">
+                <div class="panel-head">
+                    <h2 data-i18n="schedule">排班表</h2>
+                    <div class="seg" id="viewSeg">
+                        <button type="button" data-view="week" data-i18n="viewWeek">週檢視</button>
+                        <button type="button" data-view="list" data-i18n="viewList">清單</button>
+                    </div>
+                </div>
+
+                <div class="wk-nav">
+                    <button type="button" id="weekPrev" aria-label="previous week">‹</button>
+                    <div>
+                        <div class="ttl" id="weekTitle"></div>
+                        <div class="sub" id="weekSub"></div>
+                    </div>
+                    <button type="button" id="weekNext" aria-label="next week">›</button>
+                </div>
+
+                <div class="kpis" id="kpis"></div>
+
+                <div class="filters" id="listFilters">
+                    <label class="switch">
+                        <input type="checkbox" id="onlyOpen">
+                        <span data-i18n="onlyOpen">只看空缺</span>
+                    </label>
+                    <div class="chips" id="hourChips"></div>
+                </div>
+
+                <div id="days" class="days"><div class="none">…</div></div>
+            </section>
+
+            <section class="panel" id="statsPanel">
+                <div class="panel-head">
+                    <h2 data-i18n="stats">認領統計</h2>
+                </div>
+                <div class="stats-controls">
+                    <select id="statsRange" aria-label="range">
+                        <option value="next7" data-i18n="next7">未來 7 天</option>
+                        <option value="next14" data-i18n="next14">未來 14 天</option>
+                        <option value="past7" data-i18n="past7">過去 7 天</option>
+                        <option value="past30" data-i18n="past30">過去 30 天</option>
+                        <option value="thisMonth" data-i18n="thisMonth">本月</option>
+                        <option value="lastMonth" data-i18n="lastMonth">上月</option>
+                        <option value="all" data-i18n="allTime">全部</option>
+                        <option value="custom" data-i18n="custom">自訂日期</option>
+                    </select>
+                    <div class="custom-range" id="customRange" hidden>
+                        <input type="date" id="statsFrom" aria-label="from">
+                        <span>–</span>
+                        <input type="date" id="statsTo" aria-label="to">
+                    </div>
+                    <div class="chips" id="statsHourChips"></div>
+                </div>
+                <p class="range-note" id="statsNote"></p>
+                <div class="kpis" id="statsKpis"></div>
+                <div id="statsTable"></div>
+            </section>
+
+            <section class="panel admin-only" id="adminPanel"></section>
+        </main>
+
+        <footer class="foot">
+            <span data-i18n="footNote">時間以台灣時間 (UTC+8) 排定；越南時間 = 台灣時間 −1 小時</span>
+            <button type="button" class="link" id="adminEnter" data-i18n="admin">管理</button>
+        </footer>
+    </div>
+
+    <div id="modal" class="modal" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true">
+            <button type="button" class="modal-close" id="modalClose" aria-label="close">×</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

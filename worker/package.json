@@ -1,0 +1,12 @@
+{
+  "name": "lastwar-vp-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "dev": "npx wrangler@4 dev --local --port 8787",
+    "db:local": "npx wrangler@4 d1 execute lastwar-vp --local --file=schema.sql",
+    "db:remote": "npx wrangler@4 d1 execute lastwar-vp --remote --file=schema.sql",
+    "deploy": "npx wrangler@4 deploy"
+  }
+}

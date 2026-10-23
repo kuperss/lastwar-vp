@@ -1,0 +1,20 @@
+name = "lastwar-vp"
+main = "src/worker.js"
+compatibility_date = "2026-08-01"
+
+# 只要正式網址一個對外入口就夠，不需要每個版本再多開一組預覽網址
+preview_urls = false
+
+# 只允許這些來源呼叫 API。本機測試時前台跑在 127.0.0.1:8792。
+[vars]
+ALLOWED_ORIGINS = "https://kuperss.github.io,http://127.0.0.1:8792,http://localhost:8792"
+
+# 正式資料庫（2026-10-24 建立，APAC）
+[[d1_databases]]
+binding = "DB"
+database_name = "lastwar-vp"
+database_id = "621153ec-e5a7-4e01-a5e3-fee382a2887e"
+
+# 每天台灣時間 03:00 清掉過期的登入狀態與猜密碼計數
+[triggers]
+crons = ["0 19 * * *"]

@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vp-docs",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8792", "--bind", "127.0.0.1", "--directory", "docs"],
+      "port": 8792,
+      "url": "http://127.0.0.1:8792"
+    }
+  ]
+}
