@@ -952,7 +952,12 @@ select, input[type="date"], input[type="text"], input[type="password"], input[ty
     background: var(--surface-2);
     border-radius: 12px;
     padding: 9px 12px;
+    color: var(--text);
 }
+
+/* 下拉清單是瀏覽器畫的，底色預設是白的；字色、底色都要明確給，不然淺色字會落在白底上看不見 */
+select option { background-color: var(--surface-2); color: var(--text); }
+select option:checked { background-color: var(--surface-3); }
 
 input:focus, select:focus { outline: 3px solid rgba(214, 185, 140, 0.3); outline-offset: 0; border-color: var(--accent); }
 
