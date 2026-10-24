@@ -159,7 +159,7 @@ window.I18N = {
         weekNext: "7 ngày tiếp theo",
         weekLegend: "＋ = còn trống, chạm để nhận · Chạm ô của bạn để hủy · Chạm ô khác để xem chi tiết · Mờ = đã qua",
         allHours: "Tất cả khung giờ",
-        footNote: "Lịch được xếp theo giờ Đài Loan (UTC+8); giờ Việt Nam = giờ Đài Loan − 1 tiếng",
+        footNote: "Giờ hiển thị là giờ Việt Nam (UTC+7); lịch được xếp theo giờ Đài Loan (UTC+8) = giờ Việt Nam + 1 tiếng",
         tzTW: "ĐL",
         tzVN: "VN",
         prevDay: "hôm trước",

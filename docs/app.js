@@ -96,9 +96,15 @@
         return t("dayFormat", { m: d.getUTCMonth() + 1, d: d.getUTCDate(), w: t("weekdays")[d.getUTCDay()] });
     }
 
-    // 給提示訊息用的一格描述：「10/24（六） 12:00–13:00」
+    // 時間以哪個時區為主：中文、英文以台灣時間為主、越南時間為輔；越南文反過來
+    const primaryOffset = () => (state.lang === "vi" ? VN : TW);
+    const secondaryOffset = () => (state.lang === "vi" ? TW : VN);
+    const tzName = (offset) => t(offset === TW ? "tzTW" : "tzVN");
+
+    // 給提示訊息用的一格描述：「10/24（六） 12:00–13:00」（用主要時區）
     function slotText(start) {
-        return `${dayLabel(dayOf(start, TW))} ${hm(start, TW)}–${hm(start + 3600, TW)}`;
+        const off = primaryOffset();
+        return `${dayLabel(dayOf(start, off))} ${hm(start, off)}–${hm(start + 3600, off)}`;
     }
 
     // 每個人固定一個色相（黃金角分散）；彩度、亮度由主題的 CSS 決定，深色淺色主題都好看
@@ -106,8 +112,10 @@
         return `--h:${Math.round((id * 137.508) % 360)}`;
     }
 
-    function hourChipLabel(hour) {
-        return `${pad(hour)}–${pad((hour + 1) % 24)}`;
+    // hour 是台灣時間的整點（資料和篩選都用它）；顯示時換成指定時區，預設是主要時區
+    function hourChipLabel(hour, offset = primaryOffset()) {
+        const h = (hour + (offset - TW) / 3600 + 24) % 24;
+        return `${pad(h)}–${pad((h + 1) % 24)}`;
     }
 
     // ---------- API ----------
@@ -344,11 +352,12 @@
         if (st.open) cls.push("open");
         if (st.mine) cls.push("mine");
 
-        const vnPrev = dayOf(slot.start, VN) !== slot.day ? ` (${esc(t("prevDay"))})` : "";
-        const times = `<div class="times">
-            <div class="time-main"><span class="tz">${esc(t("tzTW"))}</span>${hm(slot.start, TW)}–${hm(end, TW)}</div>
-            <div class="time-sub"><span class="tz">${esc(t("tzVN"))}</span>${hm(slot.start, VN)}–${hm(end, VN)}${vnPrev}</div>
-        </div>`;
+        // 該時區的日期跟這一天（台灣日期）不同時，註明「前一天」
+        const timeLine = (cls, off) => {
+            const prev = dayOf(slot.start, off) !== slot.day ? ` (${esc(t("prevDay"))})` : "";
+            return `<div class="${cls}"><span class="tz">${esc(tzName(off))}</span>${hm(slot.start, off)}–${hm(end, off)}${prev}</div>`;
+        };
+        const times = `<div class="times">${timeLine("time-main", primaryOffset())}${timeLine("time-sub", secondaryOffset())}</div>`;
 
         const badges = [];
         if (st.live) badges.push(`<span class="badge live">${esc(t("live"))}</span>`);
@@ -387,7 +396,8 @@
         if (!slot.regular) cls.push("odd");
 
         const end = slot.start + 3600;
-        const tip = `${slotText(slot.start)} · ${t("tzVN")} ${hm(slot.start, VN)}–${hm(end, VN)}`;
+        const sec = secondaryOffset();
+        const tip = `${slotText(slot.start)} · ${tzName(sec)} ${hm(slot.start, sec)}–${hm(end, sec)}`;
         let body;
         let style = "";
         if (!st.open) {
@@ -424,7 +434,8 @@
             const d = new Date(`${day}T00:00:00Z`);
             return { w: t("weekdays")[d.getUTCDay()], md: `${d.getUTCMonth() + 1}/${d.getUTCDate()}`, dd: d.getUTCDate() };
         };
-        const vnHour = (h) => hourChipLabel((h + 23) % 24);
+        const secHour = (h) => hourChipLabel(h, secondaryOffset());
+        const secName = esc(tzName(secondaryOffset()));
 
         const html = [];
         if (wide) {
@@ -434,13 +445,13 @@
                 html.push(`<div class="wk-hd ${day === d0 ? "today" : ""}">${esc(h.w)}<b>${h.dd}</b></div>`);
             }
             for (const hour of hours) {
-                html.push(`<div class="wk-lbl"><b>${hourChipLabel(hour)}</b><span>${esc(t("tzVN"))} ${vnHour(hour)}</span></div>`);
+                html.push(`<div class="wk-lbl"><b>${hourChipLabel(hour)}</b><span>${secName} ${secHour(hour)}</span></div>`);
                 for (const day of days) html.push(cellHtml(byKey.get(`${day}|${hour}`), n));
             }
         } else {
             html.push(`<div class="wk" style="grid-template-columns:60px repeat(${hours.length},minmax(0,1fr))"><div></div>`);
             for (const hour of hours) {
-                html.push(`<div class="wk-hd"><b class="tm">${hourChipLabel(hour)}</b>${esc(t("tzVN"))} ${vnHour(hour)}</div>`);
+                html.push(`<div class="wk-hd"><b class="tm">${hourChipLabel(hour)}</b>${secName} ${secHour(hour)}</div>`);
             }
             for (const day of days) {
                 const h = dayHead(day);
@@ -541,8 +552,7 @@
         const body = openModal(`
             <h3>${esc(slotText(slot.start))}</h3>
             <div class="detail">
-                <div class="line"><span>${esc(t("tzTW"))}</span><span>${hm(slot.start, TW)}–${hm(end, TW)}</span></div>
-                <div class="line"><span>${esc(t("tzVN"))}</span><span>${hm(slot.start, VN)}–${hm(end, VN)}</span></div>
+                ${[primaryOffset(), secondaryOffset()].map((off) => `<div class="line"><span>${esc(tzName(off))}</span><span>${hm(slot.start, off)}–${hm(end, off)}</span></div>`).join("")}
                 <div class="line"><span>VP</span><span>${status}</span></div>
                 ${notes.length ? `<div class="muted">${esc(notes.join(" · "))}</div>` : ""}
                 ${st.cancellable ? `<div class="row"><button type="button" class="btn danger" id="detailCancel">${esc(t("cancel"))}</button></div>` : ""}
